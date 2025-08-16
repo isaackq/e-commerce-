@@ -1,0 +1,16 @@
+export enum ProductStatusEnum {
+  PENDING = 'pending',
+  REJECTED = 'rejected',
+  ACTIVE = 'active',
+  ARCHIVED = 'archived',
+  AVAILABLE = 'available',
+  UNAVAILABLE = 'unavailable',
+  OUT_OF_STOCK = 'out_of_stock',
+  DISCONTINUED = 'discontinued',
+  DRAFT = 'draft',
+  INACTIVE = 'inactive',
+  PREORDER = 'preorder',
+  BACKORDER = 'backorder',
+  COMING_SOON = 'coming_soon',
+  ON_SALE = 'on_sale',
+}

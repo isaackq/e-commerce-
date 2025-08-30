@@ -1,5 +1,6 @@
 import { User } from '@domain/entities/User/User';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsString, Length } from 'class-validator';
 
 export class UserResponseDto {
   @ApiProperty({
@@ -51,6 +52,14 @@ export class UserResponseDto {
   })
   city: string;
 
+  @ApiProperty({
+    type: String,
+    description: 'Country code in ISO 3166-1 alpha-2 format',
+    example: 'US',
+    required: true,
+  })
+  countryCode: string;
+
   constructor(
     id: string,
     firstName: string,
@@ -59,6 +68,7 @@ export class UserResponseDto {
     birthday: Date,
     role: string,
     city: string,
+    countryCode: string,
   ) {
     this.id = id;
     this.firstName = firstName;
@@ -67,6 +77,7 @@ export class UserResponseDto {
     this.birthday = birthday;
     this.role = role;
     this.city = city;
+    this.countryCode = countryCode;
   }
 
   static createFromEntity(user: User): UserResponseDto {
@@ -78,6 +89,7 @@ export class UserResponseDto {
       user.birthday.value,
       user.getRole(),
       user.city,
+      user.countryCode,
     );
     return userResponse;
   }

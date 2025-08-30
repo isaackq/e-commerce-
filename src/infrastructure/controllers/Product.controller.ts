@@ -1,4 +1,5 @@
 import { PaginatedResponseDto } from '@application/pagination/Dto/response/pagination.response.dto';
+import { ProductSearchDto } from '@application/product/Dtos/filter/product-search.dto';
 import { ProductFilterDto } from '@application/product/Dtos/filter/product.filter.dto';
 import { ProductRequestDto } from '@application/product/Dtos/request/product.request.dto';
 import { CreatedProductResponseDto } from '@application/product/dtos/response/created-product.response.dto';
@@ -66,6 +67,7 @@ export class ProductController {
       data: response,
     };
   }
+
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get all products' })
   @ApiResponse({
@@ -81,6 +83,23 @@ export class ProductController {
     @CurrentUser() user: User,
   ): Promise<PaginatedResponseDto<ProductResponseDto>> {
     return await this.getProductsUsecase.execute(productFilterDto, user);
+  }
+
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Search products by text and filters' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Products retrieved successfully',
+    type: PaginatedResponseDto,
+  })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad request' })
+  @Roles([RolesEnum.Admin, RolesEnum.Seller, RolesEnum.Customer])
+  @Get('/search')
+  async searchProducts(
+    @Query() ProductSearchDto: ProductSearchDto, // يحتوي على q + باقي الفلاتر
+    @CurrentUser() user: User,
+  ): Promise<PaginatedResponseDto<ProductResponseDto>> {
+    return await this.getProductsUsecase.execute(ProductSearchDto, user);
   }
 
   @ApiBearerAuth()

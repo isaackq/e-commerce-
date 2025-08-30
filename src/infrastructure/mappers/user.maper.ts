@@ -23,6 +23,7 @@ export class UserMapper {
     user.password = userDocument.password;
     user.birthday = new Birthday(userDocument.birthday);
     user.city = userDocument.city;
+    user.countryCode = userDocument.countryCode;
     user.isActive = userDocument.isActive;
 
     if (user instanceof Customer) {

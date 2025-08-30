@@ -7,11 +7,13 @@ import { User } from '@domain/entities/User/User';
 import { RolesEnum } from '@domain/enums/role.enum';
 import { ProductStatusEnum } from '@domain/enums/product-status.enum';
 
+type ProductFilterLike = ProductFilterDto & { q?: string };
+
 @Injectable()
 export class GetProductsUsecase {
   constructor(@Inject('ProductRepository') private readonly productRepository: ProductRepositoryInterface) {}
 
-  async execute(productFilterDto: ProductFilterDto, user: User): Promise<PaginatedResponseDto<ProductResponseDto>> {
+  async execute(productFilterDto: ProductFilterLike, user: User): Promise<PaginatedResponseDto<ProductResponseDto>> {
     const filter = this.toFilter(productFilterDto, user);
     const pagination = await this.productRepository.findMany(filter, productFilterDto.page, productFilterDto.limit);
 
@@ -21,10 +23,10 @@ export class GetProductsUsecase {
     });
   }
 
-  private toFilter(meetingFilterDto: ProductFilterDto, user: User): ProductFilter {
+  private toFilter(meetingFilterDto: ProductFilterLike, user: User): Partial<ProductFilter> {
     let status;
     let seller;
-    const { status: filterStatus, category } = meetingFilterDto;
+    const { status: filterStatus, category, q } = meetingFilterDto;
 
     if (user.getRole() === RolesEnum.Customer) {
       if ([ProductStatusEnum.ACTIVE].includes(filterStatus)) {
@@ -35,7 +37,7 @@ export class GetProductsUsecase {
     } else if (user.getRole() === RolesEnum.Seller) {
       if ([ProductStatusEnum.ACTIVE, ProductStatusEnum.PENDING, ProductStatusEnum.REJECTED].includes(filterStatus)) {
         status = filterStatus;
-        [ProductStatusEnum.PENDING, ProductStatusEnum.REJECTED].includes(filterStatus) ? (seller = user.id) : null; //show the REJECTED and PENDING for the current seller only
+        [ProductStatusEnum.PENDING, ProductStatusEnum.REJECTED].includes(filterStatus) ? (seller = user.id) : null; //show the REJECTED and PENDING for the current seller only if active show all products
       } else {
         throw new ForbiddenException(`Seller not allowed to show ${filterStatus}`);
       }
@@ -43,6 +45,6 @@ export class GetProductsUsecase {
       status = filterStatus;
     }
 
-    return { category, status, seller };
+    return { category, status, seller, q };
   }
 }

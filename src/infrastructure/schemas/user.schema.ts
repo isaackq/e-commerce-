@@ -25,6 +25,9 @@ export class User extends Document {
   birthday: Date;
 
   @Prop({ type: String, required: true })
+  countryCode: string;
+
+  @Prop({ type: String, required: true })
   city: string;
 
   @Prop({ type: Boolean, required: true })

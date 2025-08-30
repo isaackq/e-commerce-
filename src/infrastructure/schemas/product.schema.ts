@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, HydratedDocument, model, Types } from 'mongoose';
 import { ProductCategory } from './products-categories.schema';
 import { ProductStatusEnum } from '@domain/enums/product-status.enum';
+import { TaxClass } from './tax-class.schema';
 
 export type ProductDocument = HydratedDocument<Product>;
 
@@ -33,9 +34,14 @@ export class Product extends Document {
 
   @Prop({ type: Types.ObjectId, ref: 'User' })
   admin: Types.ObjectId;
+
+  @Prop({ type: Types.ObjectId, ref: TaxClass.name, required: true })
+  taxClass: Types.ObjectId;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
+
+ProductSchema.index({ name: 'text', description: 'text' }, { weights: { name: 5, description: 2 } }); //index text : فهرس خاص بالبحث النصي
 
 export const productModel = model('Product', ProductSchema);
 

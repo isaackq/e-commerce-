@@ -10,8 +10,9 @@ export class AdminResponseDto extends UserResponseDto {
     birthday: Date,
     role: string,
     city: string,
+    countryCode: string,
   ) {
-    super(id, firstName, lastName, email, birthday, role, city);
+    super(id, firstName, lastName, email, birthday, role, city, countryCode);
   }
 
   static createFromEntity(admin: Admin): AdminResponseDto {
@@ -23,6 +24,7 @@ export class AdminResponseDto extends UserResponseDto {
       admin.birthday.value,
       admin.getRole(),
       admin.city,
+      admin.countryCode,
     );
     return adminResponse;
   }

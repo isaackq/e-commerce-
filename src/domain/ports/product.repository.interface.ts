@@ -7,6 +7,7 @@ export type ProductFilter = {
   category: string;
   status: ProductStatusEnum;
   seller: string;
+  q: string;
 };
 
 export interface ProductRepositoryInterface extends FindOneRepositoryInterface<Product> {

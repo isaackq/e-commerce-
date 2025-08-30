@@ -10,8 +10,9 @@ export class SellerResponseDto extends UserResponseDto {
     birthday: Date,
     role: string,
     city: string,
+    countryCode: string,
   ) {
-    super(id, firstName, lastName, email, birthday, role, city);
+    super(id, firstName, lastName, email, birthday, role, city, countryCode);
   }
 
   static createFromEntity(seller: Seller): SellerResponseDto {
@@ -23,6 +24,7 @@ export class SellerResponseDto extends UserResponseDto {
       seller.birthday.value,
       seller.getRole(),
       seller.city,
+      seller.countryCode,
     );
     return sellerResponse;
   }

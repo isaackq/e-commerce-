@@ -36,6 +36,7 @@ export class UserTransformer {
     user.password = userRequestDto.password;
     user.birthday = new Birthday(userRequestDto.birthday);
     user.city = userRequestDto.city;
+    user.countryCode = userRequestDto.countryCode;
     user.isActive = true;
 
     if (user instanceof Customer && userRequestDto instanceof CustomerRequestDto) {
@@ -61,6 +62,7 @@ export class UserTransformer {
     if (updateUserInfoDto.email) user.email = updateUserInfoDto.email;
     if (updateUserInfoDto.birthday) user.birthday = new Birthday(updateUserInfoDto.birthday);
     if (updateUserInfoDto.city) user.city = updateUserInfoDto.city;
+    if (updateUserInfoDto.countryCode) user.countryCode = updateUserInfoDto.countryCode;
 
     return user;
   }

@@ -16,11 +16,13 @@ export class PaginationProvider {
     filter: Record<string, any> = {},
     page: number = 1,
     limit: number = 10,
+    sort?,
+    select?,
   ): Promise<Paginated<T>> {
     const skip = (page - 1) * limit;
-
+    
     const [results, totalItems] = await Promise.all([
-      model.find(filter).skip(skip).limit(limit).exec(),
+      model.find(filter).skip(skip).limit(limit).select(select).sort(sort).exec(),
       model.countDocuments(filter).exec(),
     ]);
 

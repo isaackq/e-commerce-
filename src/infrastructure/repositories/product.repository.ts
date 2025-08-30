@@ -66,12 +66,14 @@ export class ProductRepository implements ProductRepositoryInterface {
   }
 
   async findMany(productFilter?: Partial<ProductFilter>, page?: number, limit?: number): Promise<Paginated<Product>> {
-    const params = await this.buildParams(productFilter);
+    const { params, sort, select } = await this.buildParams(productFilter);
     const paginated = await this.paginationProvider.paginateQuery<ProductDocument>(
       this.productModel,
       params,
       page,
       limit,
+      sort,
+      select,
     );
 
     return { ...paginated, data: paginated.data.map((data) => ProductMapper.map(data as any)) };
@@ -79,8 +81,11 @@ export class ProductRepository implements ProductRepositoryInterface {
 
   private async buildParams(productFilter?: Partial<ProductFilter>) {
     const params = {};
+    let sort: any = { createdAt: -1 }; // defualt
+    let select: any | undefined = undefined;
+
     if (productFilter) {
-      const { category, status, seller } = productFilter;
+      const { category, status, seller, q } = productFilter;
       if (category) {
         const categories = await this.ProductCategoryModel.findOne({ category: productFilter.category });
         params['category'] = categories.id;
@@ -91,9 +96,14 @@ export class ProductRepository implements ProductRepositoryInterface {
       if (seller) {
         params['seller'] = seller;
       }
+      if (q && typeof q === 'string') {
+        params['$text'] = { $search: q };
+        sort = { score: { $meta: 'textScore' }, createdAt: -1 }; // رتّب حسب التطابق ثم الأحدث// الي بطابق اكتر بياخد سكور اعلى
+        select = { score: { $meta: 'textScore' } };
+      }
     }
 
-    return params;
+    return { params, sort, select };
   }
 
   async activePendingProduct(id: string, adminId: string): Promise<Product> {

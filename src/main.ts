@@ -39,7 +39,7 @@ async function bootstrap() {
       transform: true, //transfer the incoming request to an instance of The DTO Class
       transformOptions: {
         //بصير يحول القيمة تلقائي حسب الموجود داخل  ال دي تي او يعني ببطل لازم نعمل تايب ترانسفورمر
-        enableImplicitConversion: true,
+        enableImplicitConversion: false, //false because it transform 'false' value into true
       },
     }),
   );

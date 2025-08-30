@@ -9,6 +9,7 @@ export abstract class User {
   public password: string;
   public birthday: Birthday;
   public city: string;
+  public countryCode: string;
   public isActive: boolean;
 
   abstract getRole(): RolesEnum;

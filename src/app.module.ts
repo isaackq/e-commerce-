@@ -14,6 +14,9 @@ import { PaginationProvider } from '@infrastructure/providers/pagination.provide
 import throttleConfig from '@infrastructure/config/throttle.config';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis';
+import { MongooseConnection } from '@infrastructure/consts/constant';
+import { TaxClassModule } from '@infrastructure/modules/tax-class.module';
+import { TaxRateModule } from '@infrastructure/modules/tax-rate.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -70,6 +73,8 @@ const ENV = process.env.NODE_ENV;
     ProductCategoryModule,
     CartModule,
     FavoritesModule,
+    TaxClassModule,
+    TaxRateModule,
   ],
   controllers: [],
   providers: [

@@ -25,8 +25,9 @@ export class CustomerResponseDto extends UserResponseDto {
     birthday: Date,
     role: string,
     city: string,
+    countryCode: string,
   ) {
-    super(id, firstName, lastName, email, birthday, role, city);
+    super(id, firstName, lastName, email, birthday, role, city, countryCode);
   }
 
   static createFromEntity(customer: Customer): CustomerResponseDto {
@@ -38,6 +39,7 @@ export class CustomerResponseDto extends UserResponseDto {
       customer.birthday.value,
       customer.getRole(),
       customer.city,
+      customer.countryCode,
     );
     customerResponse.cart = CartResponseDto.createFromEntity(customer.cart);
     customerResponse.favorites = FavoritesResponseDto.createFromEntity(customer.favorites);

@@ -1,6 +1,7 @@
+import { IsCountryCode } from '@infrastructure/validators/is-country-code.validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
-import { IsDate, IsEmail, IsNotEmpty, IsString, IsStrongPassword } from 'class-validator';
+import { IsDate, IsEmail, IsNotEmpty, IsString, IsStrongPassword, Length } from 'class-validator';
 
 export class UserRequestDto {
   @ApiProperty({
@@ -64,11 +65,32 @@ export class UserRequestDto {
   @IsString()
   city: string;
 
-  constructor(firstName: string, lastName: string, email: string, birthday: Date | null, city: string) {
+  @ApiProperty({
+    type: String,
+    description: 'Country code in ISO 3166-1 alpha-2 format',
+    example: 'US',
+    required: true,
+  })
+  @IsString()
+  @IsNotEmpty()
+  @Length(2, 2)
+  @IsCountryCode({}, { message: 'Invalid countryCode (ISO alpha-2 required)' })
+  @Transform(({ value }) => (typeof value === 'string' ? value.toUpperCase().trim() : value))
+  countryCode: string;
+
+  constructor(
+    firstName: string,
+    lastName: string,
+    email: string,
+    birthday: Date | null,
+    city: string,
+    countryCode: string,
+  ) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.birthday = birthday;
     this.city = city;
+    this.countryCode = countryCode;
   }
 }
